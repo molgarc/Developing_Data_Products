@@ -1,0 +1,91 @@
+---
+title: "Mapview for Mobile Networks"
+author: "MARIANO MOLINA GARCIA"
+date: "26/05/2020"
+output:
+  slidy_presentation: 
+    font_adjustment: -1
+  ioslides_presentation: default
+---
+
+```{r, include=FALSE, warning = FALSE, echo = FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE, echo = FALSE)
+library(leaflet)
+```
+
+## Introduction
+
+The app "Mapview for Mobile Operators" is an application oriented to provide mobile operators a framework to visualize all the info related to drive test measurement campaign.
+
+The general way of working for the tool is quite simple:
+
+1.- Select type of info to show in the dialog "Select type of Info to Show in the Map"
+2.- Load a compatible CSV for that type of info in the file input dialog.If the CSV file is valid, the Status will be changed to "Valid CSV" and the Map will be shown in the main panel.
+If the CSV file was not valid(empty, missing columns,etc) the Status will show "Not Valid CSV" and the default map will be presented in the main panel.
+3.- Press "Show the Info in the Map"
+
+```{r, out.width = '80%'}
+knitr::include_graphics("C:/EMNOMIA/Data Science Specialization/Courses/Course 9/Week4/Mapview Tool/Mapview_Tool/UI.jpg")
+```
+
+## Case 1: Visualization base station locations with Mapview for Mobile Networks
+
+To visualize base station locations you need to select "Base Stations" in the Dialog "Select type of Info to Show in the Map".
+After that, you need to import a *.csv file compatible with "Base Stations" visualization. That csv must contain 3 columns with the names "LATITUDE","LONGITUDE" and "SITE".
+
+```{r}
+dataDF <- read.csv("C:/EMNOMIA/Data Science Specialization/Courses/Course 9/Week4/Mapview Tool/Mapview_Tool/BS Example.csv")
+BSIcon <- makeIcon(iconUrl = "https://simpleicon.com/wp-content/uploads/antenna-3.png",iconWidth = 31*215/230, iconHeight = 31,
+                        iconAnchorX = 31*215/230/2, iconAnchorY = 16
+                    )
+                    BSmap<- dataDF %>% leaflet() %>%
+                        addTiles()%>%
+                        addMarkers(icon = BSIcon, lng = dataDF$LONGITUDE, lat = dataDF$LATITUDE,
+                                   popup = paste("SITE:", dataDF$SITE, "<br>",
+                                                 "LATITUDE:", dataDF$LATITUDE , "<br>",
+                                                 "LONGITUDE:", dataDF$LONGITUDE , "<br>",
+                                                 clusterOptions = markerClusterOptions()))
+                    BSmap
+```
+
+## Case 2: Visualization drive test locations with Mapview for Mobile Networks
+
+To visualize drive test locations you need to select "TMS Points" in the Dialog "Select type of Info to Show in the Map".
+After that, you need to import a *.csv file compatible with "TMS Points" visualization. That csv must contain 12 columns with the names "LATITUDE","LONGITUDE","ZOOM_LEVEL","XPIXEL_ID_ABSOLUTE","YPIXEL_ID_ABSOLUTE","TILE_QUADKEY","XTILE_STANDARD","YTILE_STANDARD","XPIXEL_ID_TILE_RELATIVE", "YPIXEL_ID_TILE_RELATIVE","RESOLUTION_ZOOM_LEVEL","RESOLUTION_LATITUDE_LONGITUDE".
+
+```{r}
+library(leaflet)
+dataDF <- read.csv("C:/EMNOMIA/Data Science Specialization/Courses/Course 9/Week4/Mapview Tool/Mapview_Tool/TMS Example.csv")
+MPmap <- dataDF %>% leaflet() %>% 
+                     addTiles()%>%
+                     addCircleMarkers(lng = dataDF$LONGITUDE, lat = dataDF$LATITUDE,
+                                      popup = paste("LATITUDE",dataDF$LATITUDE, "<br>",
+                                                    "LONGITUDE:",dataDF$LONGITUDE , "<br>",
+                                                    "ZOOM_LEVEL:",dataDF$ZOOM_LEVEL , "<br>",
+                                                    "XPIXEL_ID_ABSOLUTE:",dataDF$XPIXEL_ID_ABSOLUTE , "<br>",
+                                                    "YPIXEL_ID_ABSOLUTE:",dataDF$YPIXEL_ID_ABSOLUTE , "<br>",
+                                                    "TILE_QUADKEY:",dataDF$TILE_QUADKEY , "<br>",
+                                                    "XTILE_STANDARD:",dataDF$XTILE_STANDARD , "<br>",
+                                                    "YTILE_STANDARD:",dataDF$YTILE_STANDARD , "<br>",
+                                                    "XPIXEL_ID_TILE_RELATIVE:",dataDF$XPIXEL_ID_TILE_RELATIVE , "<br>",
+                                                    "YPIXEL_ID_TILE_RELATIVE:",dataDF$YPIXEL_ID_TILE_RELATIVE , "<br>",
+                                                    "RESOLUTION_ZOOM_LEVEL:",dataDF$RESOLUTION_ZOOM_LEVEL , "<br>",
+                                                    "RESOLUTION_LATITUDE_LONGITUDE:",dataDF$RESOLUTION_LATITUDE_LONGITUDE
+                                                    ))
+MPmap
+```
+
+## Case 3: Visualization KPIs Values obtained with Mapview for Mobile Networks
+
+To visualize KPI values measured to determine the quality of the deployment, you need to select "KPI Value" in the Dialog "Select type of Info to Show in the Map".
+After that, you need to import a *.csv file compatible with "KPI Value" visualization. That csv must contain 3 columns with the names "LATITUDE","LONGITUDE" and "VALUE".
+
+```{r}
+dataDF <- read.csv("C:/EMNOMIA/Data Science Specialization/Courses/Course 9/Week4/Mapview Tool/Mapview_Tool/KPI Example.csv")
+pal <- colorNumeric("Spectral",reverse = TRUE, c(max(dataDF$VALUE),min(dataDF$VALUE)), na.color = "transparent")
+RFMap <-  dataDF %>% leaflet() %>% addTiles() %>% addCircles(lng = dataDF$LONGITUDE, lat = dataDF$LATITUDE,color = pal(dataDF$VALUE),popup = paste("LATITUDE",dataDF$LATITUDE, "<br>","LONGITUDE:",dataDF$LONGITUDE, "<br>","KPI_VALUE:", dataDF$VALUE)) %>% addLegend(position = c("topright"), pal=pal,values = dataDF$VALUE,title = "KPI Value")
+RFMap
+```
+
+## References
+

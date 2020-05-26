@@ -1,0 +1,149 @@
+---
+title: "Documentation Mapview for Mobile Networks"
+author: "MARIANO MOLINA GARCIA"
+date: "26/05/2020"
+output: html_document
+---
+
+```{r, include=FALSE, warning = FALSE, echo = FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE, echo = FALSE)
+library(leaflet)
+```
+
+## Introduction
+
+The app "Mapview for Mobile Operators" is an application oriented to provide mobile operators a framework to visualize all the info related to drive test measurement campaign. These measurement campaigs are typically conceived to check the quality of the mobile networks. For that purpose, taking into account the position of the base stations, different points to carry out measurements are defined. In those locations, quality measurements (signal stregth, interference, etc) are gathered, to analyze if the operator is fulfilling its coverage and quality specifications. 
+
+## User Options in Mapview for Mobile Networks
+
+The general way of working for the tool is quite simple:
+
+1.- Select type of info to show in the dialog "Select type of Info to Show in the Map"
+
+2.- Load a compatible CSV for that type of info in the file input dialog.
+
+3.- Press "Show the Info in the Map"
+
+The user interface of the app is presented below:
+
+```{r, out.width = '80%'}
+knitr::include_graphics("C:/EMNOMIA/Data Science Specialization/Courses/Course 9/Week4/Mapview Tool/Mapview_Tool/UI.jpg")
+```
+
+The application allows to visualize three different type of Data:
+
+1.- Base Station Locations Map View
+
+To visualize base station locations you need to select "Base Stations" in the Dialog "Select type of Info to Show in the Map".
+After that, you need to import a *.csv file compatible with "Base Stations" visualization. That csv must contain 3 columns with the names "LATITUDE","LONGITUDE" and "SITE".
+
+- "LATITUDE" -> Latitude of the base station in degrees.
+- "LONGITUDE" -> Longitude of the base station in degrees.
+- "SITE" -> Name of the Base Station.
+
+After that, the button "Show the info in the map" must be pressed. If the CSV file is valid, the Status will be changed to "Valid CSV" and the Map will be shown in the main panel.If the CSV file was not valid(empty, missing columns,etc) the Status will show "Not Valid CSV" and the default map will be presented in the main panel.If you click on each Base Station, the info for each one is presented.
+
+An example of base station visualization is presented below:
+
+```{r}
+dataDF <- read.csv("C:/EMNOMIA/Data Science Specialization/Courses/Course 9/Week4/Mapview Tool/Mapview_Tool/BS Example.csv")
+BSIcon <- makeIcon(iconUrl = "https://simpleicon.com/wp-content/uploads/antenna-3.png",iconWidth = 31*215/230, iconHeight = 31,
+                        iconAnchorX = 31*215/230/2, iconAnchorY = 16
+                    )
+                    BSmap<- dataDF %>% leaflet() %>%
+                        addTiles()%>%
+                        addMarkers(icon = BSIcon, lng = dataDF$LONGITUDE, lat = dataDF$LATITUDE,
+                                   popup = paste("SITE:", dataDF$SITE, "<br>",
+                                                 "LATITUDE:", dataDF$LATITUDE , "<br>",
+                                                 "LONGITUDE:", dataDF$LONGITUDE , "<br>",
+                                                 clusterOptions = markerClusterOptions()))
+                    BSmap
+```
+
+2.- Drive Test Locations Map View
+
+To visualize drive test locations you need to select "TMS Points" in the Dialog "Select type of Info to Show in the Map".
+After that, you need to import a *.csv file compatible with "TMS Points" visualization. That csv must contain 12 columns with the names "LATITUDE","LONGITUDE","ZOOM_LEVEL","XPIXEL_ID_ABSOLUTE","YPIXEL_ID_ABSOLUTE","TILE_QUADKEY","XTILE_STANDARD","YTILE_STANDARD","XPIXEL_ID_TILE_RELATIVE", "YPIXEL_ID_TILE_RELATIVE","RESOLUTION_ZOOM_LEVEL","RESOLUTION_LATITUDE_LONGITUDE".
+
+- "LATITUDE" -> Latitude of the base station in degrees.
+- "LONGITUDE" -> Longitude of the base station in degrees.
+- "ZOOM_LEVEL" -> Zoom Level
+- "XPIXEL_ID_ABSOLUTE" -> TMS X absolute coordinate. 
+- "YPIXEL_ID_ABSOLUTE" -> TMS X absolute coordinate. 
+- "TILE_QUADKEY" -> TMS Quadkey value. 
+- "XTILE_STANDARD" -> Tile X identifier
+- "YTILE_STANDARD" -> Tile Y identifier
+- "XPIXEL_ID_TILE_RELATIVE" -> TMS X relative coordinate
+- "YPIXEL_ID_TILE_RELATIVE" -> TMS Y relative coordinate
+- "RESOLUTION_ZOOM_LEVEL" -> Resolution for that Zoom Level
+- "RESOLUTION_LATITUDE_LONGITUDE" -> Resolution for that specific latitude and longitude
+
+After that, the button "Show the info in the map" must be pressed. If the CSV file is valid, the Status will be changed to "Valid CSV" and the Map will be shown in the main panel.If the CSV file was not valid(empty, missing columns,etc) the Status will show "Not Valid CSV" and the default map will be presented in the main panel.
+
+If you click on each TMS point, the info for each one is presented.
+
+An example of drive tests location visualization is presented below:
+
+```{r}
+library(leaflet)
+dataDF <- read.csv("C:/EMNOMIA/Data Science Specialization/Courses/Course 9/Week4/Mapview Tool/Mapview_Tool/TMS Example.csv")
+MPmap <- dataDF %>% leaflet() %>% 
+                     addTiles()%>%
+                     addCircleMarkers(lng = dataDF$LONGITUDE, lat = dataDF$LATITUDE,
+                                      popup = paste("LATITUDE",dataDF$LATITUDE, "<br>",
+                                                    "LONGITUDE:",dataDF$LONGITUDE , "<br>",
+                                                    "ZOOM_LEVEL:",dataDF$ZOOM_LEVEL , "<br>",
+                                                    "XPIXEL_ID_ABSOLUTE:",dataDF$XPIXEL_ID_ABSOLUTE , "<br>",
+                                                    "YPIXEL_ID_ABSOLUTE:",dataDF$YPIXEL_ID_ABSOLUTE , "<br>",
+                                                    "TILE_QUADKEY:",dataDF$TILE_QUADKEY , "<br>",
+                                                    "XTILE_STANDARD:",dataDF$XTILE_STANDARD , "<br>",
+                                                    "YTILE_STANDARD:",dataDF$YTILE_STANDARD , "<br>",
+                                                    "XPIXEL_ID_TILE_RELATIVE:",dataDF$XPIXEL_ID_TILE_RELATIVE , "<br>",
+                                                    "YPIXEL_ID_TILE_RELATIVE:",dataDF$YPIXEL_ID_TILE_RELATIVE , "<br>",
+                                                    "RESOLUTION_ZOOM_LEVEL:",dataDF$RESOLUTION_ZOOM_LEVEL , "<br>",
+                                                    "RESOLUTION_LATITUDE_LONGITUDE:",dataDF$RESOLUTION_LATITUDE_LONGITUDE
+                                                    ))
+MPmap
+```
+
+
+Some info about TMS can be found in https://docs.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system
+
+3.- KPI value Map View
+
+To visualize KPI values measured in to determine the quality of the deployment, you need to select "KPI Value" in the Dialog "Select type of Info to Show in the Map".
+After that, you need to import a *.csv file compatible with "KPI Value" visualization. That csv must contain 3 columns with the names "LATITUDE","LONGITUDE" and "VALUE".
+
+- "LATITUDE" -> Latitude of the base station in degrees.
+- "LONGITUDE" -> Longitude of the base station in degrees.
+- "VALUE" -> Value of the KPI Presented.
+
+After that, the button "Show the info in the map" must be pressed. If the CSV file is valid, the Status will be changed to "Valid CSV" and the Map will be shown in the main panel.The colorkey will be selected based on the minimum and maximum values obtained for that quality indicator. If the CSV file was not valid(empty, missing columns,etc) the Status will show "Not Valid CSV" and the default map will be presented in the main panel.
+
+If you click on each point, the info for each one is presented. 
+
+An example of KPI values visualization is presented below:
+
+```{r}
+dataDF <- read.csv("C:/EMNOMIA/Data Science Specialization/Courses/Course 9/Week4/Mapview Tool/Mapview_Tool/KPI Example.csv")
+pal <- colorNumeric("Spectral",reverse = TRUE, c(max(dataDF$VALUE),min(dataDF$VALUE)), na.color = "transparent")
+RFMap <-  dataDF %>% leaflet() %>% addTiles() %>% addCircles(lng = dataDF$LONGITUDE, lat = dataDF$LATITUDE,color = pal(dataDF$VALUE),popup = paste("LATITUDE",dataDF$LATITUDE, "<br>","LONGITUDE:",dataDF$LONGITUDE, "<br>","KPI_VALUE:", dataDF$VALUE)) %>% addLegend(position = c("topright"), pal=pal,values = dataDF$VALUE,title = "KPI Value")
+RFMap
+```
+
+## Test Files
+
+Some csv files are provided in orden to test the app. These files are:
+
+- BS Example.csv : To be used to try the base station map view.
+- TMS Example.csv : To be used to try the drive test locations map view.
+- KPI Example.csv: To be used to try the KPI value map view.
+
+The test files can be found in:
+
+## Docs and References
+
+- The app files ui.R and Server.R can be found in:
+- The test files can be found in: 
+- A presentation with Usage details can be found in:
+- TMS info: https://docs.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system
