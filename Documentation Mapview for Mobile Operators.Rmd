@@ -27,7 +27,7 @@ The general way of working for the tool is quite simple:
 The user interface of the app is presented below:
 
 ```{r, out.width = '80%'}
-knitr::include_graphics("C:/EMNOMIA/Data Science Specialization/Courses/Course 9/Week4/Mapview Tool/Mapview_Tool/UI.jpg")
+knitr::include_graphics("C:/EMNOMIA/Data Science Specialization/Developing_Data_Products_Project_Repo/Developing_Data_Products")
 ```
 
 The application allows to visualize three different type of Data:
@@ -46,8 +46,8 @@ After that, the button "Show the info in the map" must be pressed. If the CSV fi
 An example of base station visualization is presented below:
 
 ```{r}
-dataDF <- read.csv("C:/EMNOMIA/Data Science Specialization/Courses/Course 9/Week4/Mapview Tool/Mapview_Tool/BS Example.csv")
-BSIcon <- makeIcon(iconUrl = "https://simpleicon.com/wp-content/uploads/antenna-3.png",iconWidth = 31*215/230, iconHeight = 31,
+dataDF <- read.csv("C:/EMNOMIA/Data Science Specialization/Developing_Data_Products_Project_Repo/Developing_Data_Products/BS Example.csv")
+BSIcon <- makeIcon(iconUrl = "C:/EMNOMIA/Data Science Specialization/Developing_Data_Products_Project_Repo/Developing_Data_Products/antenna-3.png",iconWidth = 31*215/230, iconHeight = 31,
                         iconAnchorX = 31*215/230/2, iconAnchorY = 16
                     )
                     BSmap<- dataDF %>% leaflet() %>%
@@ -86,7 +86,7 @@ An example of drive tests location visualization is presented below:
 
 ```{r}
 library(leaflet)
-dataDF <- read.csv("C:/EMNOMIA/Data Science Specialization/Courses/Course 9/Week4/Mapview Tool/Mapview_Tool/TMS Example.csv")
+dataDF <- read.csv("C:/EMNOMIA/Data Science Specialization/Developing_Data_Products_Project_Repo/Developing_Data_Products/TMS Example.csv")
 MPmap <- dataDF %>% leaflet() %>% 
                      addTiles()%>%
                      addCircleMarkers(lng = dataDF$LONGITUDE, lat = dataDF$LATITUDE,
@@ -125,7 +125,7 @@ If you click on each point, the info for each one is presented.
 An example of KPI values visualization is presented below:
 
 ```{r}
-dataDF <- read.csv("C:/EMNOMIA/Data Science Specialization/Courses/Course 9/Week4/Mapview Tool/Mapview_Tool/KPI Example.csv")
+dataDF <- read.csv("C:/EMNOMIA/Data Science Specialization/Developing_Data_Products_Project_Repo/Developing_Data_Products/KPI Example.csv")
 pal <- colorNumeric("Spectral",reverse = TRUE, c(max(dataDF$VALUE),min(dataDF$VALUE)), na.color = "transparent")
 RFMap <-  dataDF %>% leaflet() %>% addTiles() %>% addCircles(lng = dataDF$LONGITUDE, lat = dataDF$LATITUDE,color = pal(dataDF$VALUE),popup = paste("LATITUDE",dataDF$LATITUDE, "<br>","LONGITUDE:",dataDF$LONGITUDE, "<br>","KPI_VALUE:", dataDF$VALUE)) %>% addLegend(position = c("topright"), pal=pal,values = dataDF$VALUE,title = "KPI Value")
 RFMap
@@ -143,7 +143,7 @@ The test files can be found in:
 
 ## Docs and References
 
-- The app files ui.R and Server.R can be found in:
-- The test files can be found in: 
-- A presentation with Usage details can be found in:
+- The app files ui.R and Server.R can be found in: https://github.com/molgarc/Developing_Data_Products/
+- The test files can be found in: https://github.com/molgarc/Developing_Data_Products/
+- A presentation with usage details can be found in: https://github.com/molgarc/Developing_Data_Products/
 - TMS info: https://docs.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system

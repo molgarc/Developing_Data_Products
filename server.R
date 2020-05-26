@@ -56,7 +56,7 @@ shinyServer(function(input, output) {
             if (updatedMapType() == "Base Stations"){
                 if(checkFields(dataDF,"Base Stations")){
                     BSIcon <- makeIcon(
-                        iconUrl = "https://simpleicon.com/wp-content/uploads/antenna-3.png",
+                        iconUrl = "C:/EMNOMIA/Data Science Specialization/Developing_Data_Products_Project_Repo/Developing_Data_Products/antenna-3.png",
                         iconWidth = 31*215/230, iconHeight = 31,
                         iconAnchorX = 31*215/230/2, iconAnchorY = 16
                     )
