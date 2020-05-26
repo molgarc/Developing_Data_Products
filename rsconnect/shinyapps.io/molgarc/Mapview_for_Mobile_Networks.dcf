@@ -1,0 +1,13 @@
+name: Mapview_for_Mobile_Networks
+title: Mapview_for_Mobile_Networks
+username:
+account: molgarc
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2358507
+bundleId: 3191387
+url: https://molgarc.shinyapps.io/Mapview_for_Mobile_Networks/
+when: 1590504419.3183
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: Documentation Mapview for Mobile Operators.Rmd|Presentation Mapview for Mobile Operators.Rmd

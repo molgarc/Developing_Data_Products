@@ -14,7 +14,7 @@ library(leaflet)
 shinyUI(fluidPage(
 
     # Application title
-    titlePanel("Mapview for Mobile Operators"),
+    titlePanel("Mapview for Mobile Networks"),
 
     # Sidebar with a slider input for number of bins
     sidebarLayout(

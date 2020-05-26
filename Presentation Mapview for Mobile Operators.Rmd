@@ -5,7 +5,9 @@ date: "26/05/2020"
 output:
   slidy_presentation: 
     font_adjustment: -1
-  ioslides_presentation: default
+  ioslides_presentation: 
+    widescreen: true
+    smaller: true
 ---
 
 ```{r, include=FALSE, warning = FALSE, echo = FALSE}
@@ -22,7 +24,7 @@ The app "Mapview for Mobile Operators" is an application oriented to provide mob
 - Press "Show the Info in the Map". The "Status" will show if the imported CSV is valid or not for the tyoe of info selected.
 
 ```{r, out.width = '80%'}
-knitr::include_graphics("C:/EMNOMIA/Data Science Specialization/Developing_Data_Products_Project_Repo/Developing_Data_Products/UI.jpg")
+knitr::include_graphics("UI.jpg")
 ```
 
 ## Case 1: Visualization base station locations with Mapview for Mobile Networks
@@ -31,8 +33,8 @@ To visualize base station locations you need to select "Base Stations" in the Di
 After that, you need to import a *.csv file compatible with "Base Stations" visualization. That csv must contain 3 columns with the names "LATITUDE","LONGITUDE" and "SITE".
 
 ```{r}
-dataDF <- read.csv("C:/EMNOMIA/Data Science Specialization/Developing_Data_Products_Project_Repo/Developing_Data_Products/BS Example.csv")
-BSIcon <- makeIcon(iconUrl = "C:/EMNOMIA/Data Science Specialization/Developing_Data_Products_Project_Repo/Developing_Data_Products/antenna-3.png",iconWidth = 31*215/230, iconHeight = 31,
+dataDF <- read.csv("BS Example.csv")
+BSIcon <- makeIcon(iconUrl = "antenna-3.png",iconWidth = 31*215/230, iconHeight = 31,
                         iconAnchorX = 31*215/230/2, iconAnchorY = 16
                     )
                     BSmap<- dataDF %>% leaflet() %>%
@@ -52,7 +54,7 @@ After that, you need to import a *.csv file compatible with "TMS Points" visuali
 
 ```{r}
 library(leaflet)
-dataDF <- read.csv("C:/EMNOMIA/Data Science Specialization/Developing_Data_Products_Project_Repo/Developing_Data_Products/TMS Example.csv")
+dataDF <- read.csv("TMS Example.csv")
 MPmap <- dataDF %>% leaflet() %>% 
                      addTiles()%>%
                      addCircleMarkers(lng = dataDF$LONGITUDE, lat = dataDF$LATITUDE,
@@ -78,7 +80,7 @@ To visualize KPI values measured to determine the quality of the deployment, you
 After that, you need to import a *.csv file compatible with "KPI Value" visualization. That csv must contain 3 columns with the names "LATITUDE","LONGITUDE" and "VALUE".
 
 ```{r}
-dataDF <- read.csv("C:/EMNOMIA/Data Science Specialization/Developing_Data_Products_Project_Repo/Developing_Data_Products/KPI Example.csv")
+dataDF <- read.csv("KPI Example.csv")
 pal <- colorNumeric("Spectral",reverse = TRUE, c(max(dataDF$VALUE),min(dataDF$VALUE)), na.color = "transparent")
 RFMap <-  dataDF %>% leaflet() %>% addTiles() %>% addCircles(lng = dataDF$LONGITUDE, lat = dataDF$LATITUDE,color = pal(dataDF$VALUE),popup = paste("LATITUDE",dataDF$LATITUDE, "<br>","LONGITUDE:",dataDF$LONGITUDE, "<br>","KPI_VALUE:", dataDF$VALUE)) %>% addLegend(position = c("topright"), pal=pal,values = dataDF$VALUE,title = "KPI Value")
 RFMap
